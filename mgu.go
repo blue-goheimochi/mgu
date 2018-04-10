@@ -14,6 +14,11 @@ var (
 	appConfigFilePath = appConfigDirPath + "/settign.json"
 )
 
+type User struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
+
 func main() {
 	app := cli.NewApp()
 	app.Name = "mgu"
@@ -40,6 +45,12 @@ func main() {
 			Aliases: []string{"s"},
 			Usage:   "Show current Git's user",
 			Action:  cmdShow,
+		},
+		{
+			Name:    "add",
+			Aliases: []string{"a"},
+			Usage:   "Add Git's local user",
+			Action:  cmdAdd,
 		},
 	}
 
