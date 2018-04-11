@@ -5,6 +5,7 @@ import (
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/urfave/cli"
+	"gopkg.in/AlecAivazis/survey.v1/core"
 )
 
 var (
@@ -20,6 +21,11 @@ type User struct {
 }
 
 func main() {
+	core.ErrorIcon = "X"
+	core.SelectFocusIcon = ">"
+	core.MarkedOptionIcon = "[x]"
+	core.UnmarkedOptionIcon = "[ ]"
+
 	app := cli.NewApp()
 	app.Name = "mgu"
 	app.Usage = "Manage git local users"
@@ -51,6 +57,11 @@ func main() {
 			Aliases: []string{"a"},
 			Usage:   "Add Git's local user",
 			Action:  cmdAdd,
+		},
+		{
+			Name:   "set",
+			Usage:  "Setting Git's local user",
+			Action: cmdSet,
 		},
 	}
 

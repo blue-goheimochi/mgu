@@ -58,3 +58,15 @@ func getEmail() string {
 	}
 	return strings.TrimRight(strings.Replace(string(out), "user.email=", "", 1), "\n")
 }
+
+func setLocalUser(name string, email string) bool {
+	err := exec.Command("git", "config", "--local", "user.name", name).Run()
+	if err != nil {
+		panic(err)
+	}
+	err = exec.Command("git", "config", "--local", "user.email", email).Run()
+	if err != nil {
+		panic(err)
+	}
+	return true
+}
