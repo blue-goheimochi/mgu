@@ -69,6 +69,12 @@ func main() {
 			Usage:   "Display Git's local users",
 			Action:  cmdList,
 		},
+		{
+			Name:    "remove",
+			Aliases: []string{"r"},
+			Usage:   "Remove Git's local user",
+			Action:  cmdRemove,
+		},
 	}
 
 	app.Run(os.Args)
