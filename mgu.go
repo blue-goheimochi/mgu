@@ -63,6 +63,12 @@ func main() {
 			Usage:  "Setting Git's local user",
 			Action: cmdSet,
 		},
+		{
+			Name:    "list",
+			Aliases: []string{"l"},
+			Usage:   "Display Git's local users",
+			Action:  cmdList,
+		},
 	}
 
 	app.Run(os.Args)
