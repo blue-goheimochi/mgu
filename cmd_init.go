@@ -9,11 +9,15 @@ import (
 
 func cmdInit(c *cli.Context) error {
 	if !fileExists(configDirPath) {
-		createDirectory(configDirPath)
+		if err := createDirectory(configDirPath); err != nil {
+			return fmt.Errorf("failed to create config directory: %w", err)
+		}
 	}
 
 	if !fileExists(appConfigDirPath) {
-		createDirectory(appConfigDirPath)
+		if err := createDirectory(appConfigDirPath); err != nil {
+			return fmt.Errorf("failed to create app config directory: %w", err)
+		}
 	}
 
 	if fileExists(appConfigFilePath) {
