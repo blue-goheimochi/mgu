@@ -7,14 +7,6 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-// defaultRepositoryFactory creates a new Git repository
-func defaultRepositoryFactory() git.Repository {
-	return git.NewLocalRepository()
-}
-
-// For testing - allow injecting a repository
-var repositoryFactory = defaultRepositoryFactory
-
 // Show displays the current Git user information
 func Show(c *cli.Context) error {
 	repo := repositoryFactory()

@@ -10,9 +10,6 @@ type MockRepository struct {
 	SetLocalUserFunc  func(name, email string) error
 }
 
-// Ensure MockRepository implements Repository
-var _ Repository = (*MockRepository)(nil)
-
 // NewMockRepository creates a new MockRepository with default values
 func NewMockRepository() *MockRepository {
 	return &MockRepository{
