@@ -1,0 +1,6 @@
+
+# Build artifacts
+/mgu
+/mgu_new
+/coverage.txt
+/fix_declarations.sh
