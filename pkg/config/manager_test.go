@@ -6,31 +6,28 @@ import (
 )
 
 func TestManager_GetUsers(t *testing.T) {
-	// Setup test helper
-	helper := NewTestHelper(t)
-	
 	// Test cases
 	tests := []struct {
 		name        string
-		setupFunc   func()
+		setupFunc   func(*TestHelper)
 		want        []User
 		wantErrMsg  string
 	}{
 		{
 			name: "empty users list",
-			setupFunc: func() {
-				helper.CreateEmptySettingsFile()
+			setupFunc: func(h *TestHelper) {
+				h.CreateEmptySettingsFile()
 			},
 			want: []User{},
 		},
 		{
 			name: "users list with entries",
-			setupFunc: func() {
+			setupFunc: func(h *TestHelper) {
 				users := []User{
 					{Name: "Test User 1", Email: "test1@example.com"},
 					{Name: "Test User 2", Email: "test2@example.com"},
 				}
-				helper.CreateSettingsFileWithUsers(users)
+				h.CreateSettingsFileWithUsers(users)
 			},
 			want: []User{
 				{Name: "Test User 1", Email: "test1@example.com"},
@@ -39,7 +36,7 @@ func TestManager_GetUsers(t *testing.T) {
 		},
 		{
 			name:       "file does not exist",
-			setupFunc:  func() {}, // Do nothing, file won't exist
+			setupFunc:  func(h *TestHelper) {}, // Do nothing, file won't exist
 			wantErrMsg: "settings file not found",
 		},
 	}
@@ -50,11 +47,11 @@ func TestManager_GetUsers(t *testing.T) {
 			// New helper for each test to avoid interference
 			helper := NewTestHelper(t)
 			
-			// Setup for this test case
-			tt.setupFunc()
+			// Setup for this test case using the new helper
+			tt.setupFunc(helper)
 			
 			// Create a manager that uses the test settings file
-			manager := helper.CreateManager()
+			manager := NewManager(helper.SettingFile)
 			
 			// Test GetUsers
 			got, err := manager.GetUsers()
@@ -84,21 +81,18 @@ func TestManager_GetUsers(t *testing.T) {
 }
 
 func TestManager_AddUser(t *testing.T) {
-	// Setup test helper
-	helper := NewTestHelper(t)
-	
 	// Test cases
 	tests := []struct {
 		name        string
-		setupFunc   func()
+		setupFunc   func(*TestHelper)
 		user        User
 		wantUsers   []User
 		wantErrMsg  string
 	}{
 		{
 			name: "add to empty list",
-			setupFunc: func() {
-				helper.CreateEmptySettingsFile()
+			setupFunc: func(h *TestHelper) {
+				h.CreateEmptySettingsFile()
 			},
 			user: User{Name: "New User", Email: "new@example.com"},
 			wantUsers: []User{
@@ -107,11 +101,11 @@ func TestManager_AddUser(t *testing.T) {
 		},
 		{
 			name: "add to existing list",
-			setupFunc: func() {
+			setupFunc: func(h *TestHelper) {
 				users := []User{
 					{Name: "Existing User", Email: "existing@example.com"},
 				}
-				helper.CreateSettingsFileWithUsers(users)
+				h.CreateSettingsFileWithUsers(users)
 			},
 			user: User{Name: "New User", Email: "new@example.com"},
 			wantUsers: []User{
@@ -124,11 +118,14 @@ func TestManager_AddUser(t *testing.T) {
 	// Run tests
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			// Create a new helper for each test
+			helper := NewTestHelper(t)
+			
 			// Setup for this test case
-			tt.setupFunc()
+			tt.setupFunc(helper)
 			
 			// Create a manager that uses the test settings file
-			manager := helper.CreateManager()
+			manager := NewManager(helper.SettingFile)
 			
 			// Test AddUser
 			err := manager.AddUser(tt.user)
@@ -161,9 +158,6 @@ func TestManager_AddUser(t *testing.T) {
 }
 
 func TestManager_RemoveUser(t *testing.T) {
-	// Setup test helper
-	helper := NewTestHelper(t)
-	
 	// Common setup
 	initialUsers := []User{
 		{Name: "User 1", Email: "user1@example.com"},
@@ -198,11 +192,14 @@ func TestManager_RemoveUser(t *testing.T) {
 	// Run tests
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			// Create a new helper for each test
+			helper := NewTestHelper(t)
+			
 			// Setup fresh users for each test
 			helper.CreateSettingsFileWithUsers(initialUsers)
 			
 			// Create a manager that uses the test settings file
-			manager := helper.CreateManager()
+			manager := NewManager(helper.SettingFile)
 			
 			// Test RemoveUser
 			err := manager.RemoveUser(tt.removeName, tt.removeEmail)
