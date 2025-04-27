@@ -7,9 +7,12 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+// For testing - allow injecting a repository
+var repositoryFactory = git.NewLocalRepository
+
 // Show displays the current Git user information
 func Show(c *cli.Context) error {
-	repo := git.NewLocalRepository()
+	repo := repositoryFactory()
 	
 	if !repo.IsGitRepository() {
 		fmt.Println("Your current directory is not a git repository.")

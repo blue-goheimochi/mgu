@@ -3,6 +3,8 @@ package commands
 import (
 	"strings"
 	"testing"
+	
+	"github.com/blue-goheimochi/mgu/pkg/git"
 )
 
 func TestShow(t *testing.T) {
@@ -86,12 +88,12 @@ func TestShow(t *testing.T) {
 				return tt.globalEmail
 			}
 			
-			// Replace the global function with a function that returns our mock
-			originalNewRepo := NewLocalRepository
-			git.NewLocalRepository = func() git.Repository {
+			// Replace the factory function with one that returns our mock
+			originalFactory := repositoryFactory
+			repositoryFactory = func() git.Repository {
 				return mockRepo
 			}
-			defer func() { git.NewLocalRepository = originalNewRepo }()
+			defer func() { repositoryFactory = originalFactory }()
 			
 			// Capture output
 			output := CaptureOutput(func() {
