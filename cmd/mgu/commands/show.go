@@ -3,7 +3,6 @@ package commands
 import (
 	"fmt"
 
-	"github.com/blue-goheimochi/mgu/pkg/git"
 	"github.com/urfave/cli/v2"
 )
 
