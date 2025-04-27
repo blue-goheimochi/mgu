@@ -3,21 +3,20 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 
-	"github.com/urfave/cli"
-	"gopkg.in/AlecAivazis/survey.v1"
+	"github.com/AlecAivazis/survey/v2"
+	"github.com/urfave/cli/v2"
 )
 
-func cmdAdd(c *cli.Context) {
+func cmdAdd(c *cli.Context) error {
 	if !isInitialize() {
 		fmt.Println("You need to initialize.")
 		fmt.Println("Please execute the following command.")
 		fmt.Println("")
 		fmt.Println("  mgu init")
 		fmt.Println("")
-		return
+		return nil
 	}
 
 	var qs = []*survey.Question{
@@ -39,7 +38,7 @@ func cmdAdd(c *cli.Context) {
 	err := survey.Ask(qs, &answers)
 	if err != nil {
 		fmt.Println(err.Error())
-		return
+		return nil
 	}
 
 	user := User{
@@ -47,22 +46,32 @@ func cmdAdd(c *cli.Context) {
 		Email: answers.Email,
 	}
 
-	raw, err := ioutil.ReadFile(appConfigFilePath)
+	raw, err := os.ReadFile(appConfigFilePath)
 	if err != nil {
 		fmt.Println("You need to initialize.")
 		fmt.Println("Please execute the following command.")
 		fmt.Println("")
-		fmt.Println("  mugu init")
+		fmt.Println("  mgu init")
 		fmt.Println("")
-		return
+		return nil
 	}
 
 	var uc []User
-	json.Unmarshal(raw, &uc)
+	if err := json.Unmarshal(raw, &uc); err != nil {
+		return fmt.Errorf("failed to unmarshal settings: %w", err)
+	}
 
 	uc = append(uc, user)
 
-	bytes, _ := json.Marshal(&uc)
-	ioutil.WriteFile(appConfigFilePath, bytes, os.ModePerm)
+	bytes, err := json.Marshal(&uc)
+	if err != nil {
+		return fmt.Errorf("failed to marshal settings: %w", err)
+	}
+	
+	if err := os.WriteFile(appConfigFilePath, bytes, os.ModePerm); err != nil {
+		return fmt.Errorf("failed to write settings: %w", err)
+	}
+	
 	fmt.Println(user.Name + " <" + user.Email + "> is added.")
+	return nil
 }

@@ -3,36 +3,36 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 
-	"github.com/urfave/cli"
-	"gopkg.in/AlecAivazis/survey.v1"
+	"github.com/AlecAivazis/survey/v2"
+	"github.com/urfave/cli/v2"
 )
 
-func cmdSet(c *cli.Context) {
+func cmdSet(c *cli.Context) error {
 	if !isInitialize() {
 		fmt.Println("You need to initialize.")
 		fmt.Println("Please execute the following command.")
 		fmt.Println("")
 		fmt.Println("  mgu init")
 		fmt.Println("")
-		return
+		return nil
 	}
 
-	raw, err := ioutil.ReadFile(appConfigFilePath)
+	raw, err := os.ReadFile(appConfigFilePath)
 	if err != nil {
 		fmt.Println("You need to initialize.")
 		fmt.Println("Please execute the following command.")
 		fmt.Println("")
 		fmt.Println("  mgu init")
 		fmt.Println("")
-		return
+		return nil
 	}
 
 	var uc []User
 	if err := json.Unmarshal(raw, &uc); err != nil {
-		panic(err)
+		return fmt.Errorf("failed to unmarshal settings: %w", err)
 	}
 
 	var list []string
@@ -51,10 +51,10 @@ func cmdSet(c *cli.Context) {
 		Message: message,
 		Options: list,
 	}
-	err = survey.AskOne(prompt, &selected, nil)
+	err = survey.AskOne(prompt, &selected)
 	if err != nil {
 		fmt.Println(err.Error())
-		return
+		return nil
 	}
 
 	s := strings.Split(selected, " ")
@@ -62,7 +62,10 @@ func cmdSet(c *cli.Context) {
 	name := s[0]
 	email := r.Replace(s[1])
 
-	_ = setLocalUser(name, email)
+	if err := setLocalUser(name, email); err != nil {
+		return fmt.Errorf("failed to set local user: %w", err)
+	}
 
 	fmt.Println(name + " <" + email + "> has been set as a Git' local user.")
+	return nil
 }

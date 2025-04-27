@@ -1,18 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"os"
+	"path/filepath"
 
-	"github.com/mitchellh/go-homedir"
-	"github.com/urfave/cli"
-	"gopkg.in/AlecAivazis/survey.v1/core"
+	"github.com/AlecAivazis/survey/v2"
+	"github.com/urfave/cli/v2"
 )
 
 var (
-	homeDirPath, _    = homedir.Dir()
-	configDirPath     = homeDirPath + "/.config"
-	appConfigDirPath  = configDirPath + "/mgu"
-	appConfigFilePath = appConfigDirPath + "/settign.json"
+	homeDirPath, _    = os.UserHomeDir()
+	configDirPath     = filepath.Join(homeDirPath, ".config")
+	appConfigDirPath  = filepath.Join(configDirPath, "mgu")
+	appConfigFilePath = filepath.Join(appConfigDirPath, "setting.json") // Fix typo in filename
 )
 
 type User struct {
@@ -21,10 +22,9 @@ type User struct {
 }
 
 func main() {
-	core.ErrorIcon = "X"
-	core.SelectFocusIcon = ">"
-	core.MarkedOptionIcon = "[x]"
-	core.UnmarkedOptionIcon = "[ ]"
+	survey.ErrorTemplate = survey.ErrorTemplate + "X"
+	// v2 uses a different way to customize icons
+	// via survey.WithIcons() option when calling AskOne/Ask
 
 	app := cli.NewApp()
 	app.Name = "mgu"
@@ -32,14 +32,13 @@ func main() {
 	app.Version = "0.0.1"
 	app.Action = func(c *cli.Context) error {
 		if c.Args().Get(0) == "" {
-			cmdShow(c)
+			return cmdShow(c)
 		} else {
-			cli.ShowCommandHelp(c, "")
+			return cli.ShowCommandHelp(c, "")
 		}
-		return nil
 	}
 
-	app.Commands = []cli.Command{
+	app.Commands = []*cli.Command{
 		{
 			Name:    "init",
 			Aliases: []string{"i"},
@@ -77,5 +76,8 @@ func main() {
 		},
 	}
 
-	app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
 }

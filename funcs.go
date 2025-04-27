@@ -13,8 +13,9 @@ func fileExists(filename string) bool {
 	return err == nil
 }
 
-func createDirectory(path string) {
+func createDirectory(path string) error {
 	if err := os.Mkdir(path, 0755); err != nil {
-		panic(err)
+		return err
 	}
+	return nil
 }
