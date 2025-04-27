@@ -2,10 +2,20 @@
 
 mgu - Manage git local users.
 
+![Go Tests](https://github.com/blue-goheimochi/mgu/workflows/Go%20Tests/badge.svg)
+
 ## Install
 
 ```
-$ go get github.com/blue-goheimochi/mgu
+$ go install github.com/blue-goheimochi/mgu/cmd/mgu@latest
+```
+
+For development version:
+
+```
+$ git clone https://github.com/blue-goheimochi/mgu.git
+$ cd mgu
+$ go build -o mgu ./cmd/mgu
 ```
 
 ## Usage
@@ -56,6 +66,20 @@ $ go get github.com/blue-goheimochi/mgu
       pink-goheimochi <pink-goheimochi@example.com>
     blue-goheimochi <blue-goheimochi@example.com> has been set as a Git' local user.
     ````
+
+## Development
+
+### Running Tests
+
+```
+$ go test ./...
+```
+
+### Project Structure
+
+- `cmd/mgu`: Main executable and CLI definition
+- `pkg/config`: Configuration management
+- `pkg/git`: Git repository operations
 
 ## License
 
