@@ -8,7 +8,9 @@ import (
 )
 
 // For testing - allow injecting a repository
-var repositoryFactory = git.NewLocalRepository
+var repositoryFactory = func() git.Repository {
+	return git.NewLocalRepository()
+}
 
 // Show displays the current Git user information
 func Show(c *cli.Context) error {
