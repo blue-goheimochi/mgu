@@ -36,8 +36,15 @@ func TestList(t *testing.T) {
 			// Setup test helper
 			helper := NewTestCommandHelper(t)
 			
+			// Save original path
+			origPath := config.SettingFilePath
+			defer func() { config.SettingFilePath = origPath }()
+			
 			// Setup config
 			helper.SetupConfig(tt.setupUsers)
+			
+			// Set path to test file
+			config.SettingFilePath = helper.SettingFile
 			
 			// Capture output
 			output := CaptureOutput(func() {
