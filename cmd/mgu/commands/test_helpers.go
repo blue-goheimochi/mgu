@@ -42,6 +42,7 @@ type TestCommandHelper struct {
 	t         *testing.T
 	ctx       *cli.Context
 	configDir string
+	SettingFile string
 	mockRepo  *git.MockRepository
 }
 
@@ -54,6 +55,7 @@ func NewTestCommandHelper(t *testing.T) *TestCommandHelper {
 
 	// Create a temporary directory for config files
 	tempDir := t.TempDir()
+	settingFile := filepath.Join(tempDir, "setting.json")
 
 	// Create a mock repository
 	mockRepo := git.NewMockRepository()
@@ -62,29 +64,20 @@ func NewTestCommandHelper(t *testing.T) *TestCommandHelper {
 		t:         t,
 		ctx:       ctx,
 		configDir: tempDir,
+		SettingFile: settingFile,
 		mockRepo:  mockRepo,
 	}
 }
 
 // SetupConfig initializes a config file with test users
 func (h *TestCommandHelper) SetupConfig(users []config.User) {
-	// Create the config directory
-	configPath := filepath.Join(h.configDir, "setting.json")
-	
 	// Create parent directory
-	if err := os.MkdirAll(filepath.Dir(configPath), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(h.SettingFile), 0755); err != nil {
 		h.t.Fatalf("Failed to create config directory: %v", err)
 	}
 	
-	// Save original setting path and restore it later
-	origPath := config.SettingFilePath
-	defer func() { config.SettingFilePath = origPath }()
-	
-	// Set the config path to our test path
-	config.SettingFilePath = configPath
-	
 	// Create and initialize the config file
-	mgr := config.NewManager(configPath)
+	mgr := config.NewManager(h.SettingFile)
 	if err := mgr.SaveUsers(users); err != nil {
 		h.t.Fatalf("Failed to initialize config: %v", err)
 	}
