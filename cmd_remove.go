@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -21,7 +20,7 @@ func cmdRemove(c *cli.Context) error {
 		return nil
 	}
 
-	raw, err := ioutil.ReadFile(appConfigFilePath)
+	raw, err := os.ReadFile(appConfigFilePath)
 	if err != nil {
 		fmt.Println("You need to initialize.")
 		fmt.Println("Please execute the following command.")
@@ -84,7 +83,7 @@ func cmdRemove(c *cli.Context) error {
 			return fmt.Errorf("failed to marshal settings: %w", err)
 		}
 		
-		if err := ioutil.WriteFile(appConfigFilePath, bytes, os.ModePerm); err != nil {
+		if err := os.WriteFile(appConfigFilePath, bytes, os.ModePerm); err != nil {
 			return fmt.Errorf("failed to write settings: %w", err)
 		}
 		

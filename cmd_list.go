@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 
 	"github.com/urfave/cli/v2"
 )
@@ -18,7 +18,7 @@ func cmdList(c *cli.Context) error {
 		return nil
 	}
 
-	raw, err := ioutil.ReadFile(appConfigFilePath)
+	raw, err := os.ReadFile(appConfigFilePath)
 	if err != nil {
 		fmt.Println("You need to initialize.")
 		fmt.Println("Please execute the following command.")

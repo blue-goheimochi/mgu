@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -20,7 +20,7 @@ func cmdSet(c *cli.Context) error {
 		return nil
 	}
 
-	raw, err := ioutil.ReadFile(appConfigFilePath)
+	raw, err := os.ReadFile(appConfigFilePath)
 	if err != nil {
 		fmt.Println("You need to initialize.")
 		fmt.Println("Please execute the following command.")

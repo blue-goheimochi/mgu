@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -47,7 +46,7 @@ func cmdAdd(c *cli.Context) error {
 		Email: answers.Email,
 	}
 
-	raw, err := ioutil.ReadFile(appConfigFilePath)
+	raw, err := os.ReadFile(appConfigFilePath)
 	if err != nil {
 		fmt.Println("You need to initialize.")
 		fmt.Println("Please execute the following command.")
@@ -69,7 +68,7 @@ func cmdAdd(c *cli.Context) error {
 		return fmt.Errorf("failed to marshal settings: %w", err)
 	}
 	
-	if err := ioutil.WriteFile(appConfigFilePath, bytes, os.ModePerm); err != nil {
+	if err := os.WriteFile(appConfigFilePath, bytes, os.ModePerm); err != nil {
 		return fmt.Errorf("failed to write settings: %w", err)
 	}
 	
