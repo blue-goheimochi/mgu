@@ -3,17 +3,17 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mitchellh/go-homedir"
 	"github.com/urfave/cli/v2"
 )
 
 var (
-	homeDirPath, _    = homedir.Dir()
-	configDirPath     = homeDirPath + "/.config"
-	appConfigDirPath  = configDirPath + "/mgu"
-	appConfigFilePath = appConfigDirPath + "/settign.json"
+	homeDirPath, _    = os.UserHomeDir()
+	configDirPath     = filepath.Join(homeDirPath, ".config")
+	appConfigDirPath  = filepath.Join(configDirPath, "mgu")
+	appConfigFilePath = filepath.Join(appConfigDirPath, "setting.json") // Fix typo in filename
 )
 
 type User struct {
