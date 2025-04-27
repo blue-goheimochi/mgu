@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mitchellh/go-homedir"
 	"github.com/urfave/cli/v2"
-	"gopkg.in/AlecAivazis/survey.v1/core"
 )
 
 var (
@@ -22,10 +22,9 @@ type User struct {
 }
 
 func main() {
-	core.ErrorIcon = "X"
-	core.SelectFocusIcon = ">"
-	core.MarkedOptionIcon = "[x]"
-	core.UnmarkedOptionIcon = "[ ]"
+	survey.ErrorTemplate = survey.ErrorTemplate + "X"
+	// v2 uses a different way to customize icons
+	// via survey.WithIcons() option when calling AskOne/Ask
 
 	app := cli.NewApp()
 	app.Name = "mgu"

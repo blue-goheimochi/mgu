@@ -6,8 +6,8 @@ import (
 	"io/ioutil"
 	"strings"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/urfave/cli/v2"
-	"gopkg.in/AlecAivazis/survey.v1"
 )
 
 func cmdSet(c *cli.Context) error {
@@ -51,7 +51,7 @@ func cmdSet(c *cli.Context) error {
 		Message: message,
 		Options: list,
 	}
-	err = survey.AskOne(prompt, &selected, nil)
+	err = survey.AskOne(prompt, &selected)
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil

@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/urfave/cli/v2"
-	"gopkg.in/AlecAivazis/survey.v1"
 )
 
 func cmdRemove(c *cli.Context) error {
@@ -52,7 +52,7 @@ func cmdRemove(c *cli.Context) error {
 		Message: message,
 		Options: list,
 	}
-	err = survey.AskOne(prompt, &selected, nil)
+	err = survey.AskOne(prompt, &selected)
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil
@@ -67,7 +67,7 @@ func cmdRemove(c *cli.Context) error {
 	prompt2 := &survey.Confirm{
 		Message: "Do you want to remove?",
 	}
-	if err := survey.AskOne(prompt2, &flg, nil); err != nil {
+	if err := survey.AskOne(prompt2, &flg); err != nil {
 		return fmt.Errorf("failed to confirm: %w", err)
 	}
 

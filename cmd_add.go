@@ -6,8 +6,8 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/urfave/cli/v2"
-	"gopkg.in/AlecAivazis/survey.v1"
 )
 
 func cmdAdd(c *cli.Context) error {
