@@ -6,7 +6,6 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/blue-goheimochi/mgu/pkg/config"
-	"github.com/blue-goheimochi/mgu/pkg/git"
 	"github.com/urfave/cli/v2"
 )
 
@@ -33,7 +32,7 @@ func Set(c *cli.Context) error {
 		options = append(options, fmt.Sprintf("%s <%s>", u.Name, u.Email))
 	}
 
-	repo := git.NewLocalRepository()
+	repo := repositoryFactory()
 	
 	selected := ""
 	message := "Please select a user:"
@@ -48,7 +47,7 @@ func Set(c *cli.Context) error {
 		Options: options,
 	}
 	
-	err = survey.AskOne(prompt, &selected)
+	err = askOneFunc(prompt, &selected)
 	if err != nil {
 		return fmt.Errorf("survey error: %w", err)
 	}

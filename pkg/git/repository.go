@@ -11,8 +11,9 @@ import (
 // LocalRepository implements the Repository interface for a local git repository
 type LocalRepository struct{}
 
-// NewLocalRepository creates a new instance of LocalRepository
-func NewLocalRepository() *LocalRepository {
+// createLocalRepository creates a new instance of LocalRepository
+// Note: This is not exported because we use the factory function in declarations.go
+func createLocalRepository() *LocalRepository {
 	return &LocalRepository{}
 }
 

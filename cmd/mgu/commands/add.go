@@ -31,7 +31,7 @@ func Add(c *cli.Context) error {
 		Email string
 	}{}
 
-	err := survey.Ask(qs, &answers)
+	err := askFunc(qs, &answers)
 	if err != nil {
 		return fmt.Errorf("survey error: %w", err)
 	}
