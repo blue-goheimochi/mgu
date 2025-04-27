@@ -3,13 +3,13 @@ package main
 import (
 	"fmt"
 
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
-func cmdShow(c *cli.Context) {
+func cmdShow(c *cli.Context) error {
 	if !isGitRepositoryDir() {
 		fmt.Println("Your current directory is not a git repository.")
-		return
+		return nil
 	}
 	globalName := getGlobalName()
 	globalEmail := getGlobalEmail()
@@ -30,7 +30,8 @@ func cmdShow(c *cli.Context) {
 	if !hasLocalGitUserSetting {
 		fmt.Println("Currently the following Git's global user are in use.")
 		fmt.Println(globalName + " <" + globalEmail + ">")
-		return
+		return nil
 	}
 	fmt.Println(name + " <" + email + ">")
+	return nil
 }

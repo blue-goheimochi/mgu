@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os/exec"
 	"strings"
 
@@ -59,14 +60,14 @@ func getEmail() string {
 	return strings.TrimRight(strings.Replace(string(out), "user.email=", "", 1), "\n")
 }
 
-func setLocalUser(name string, email string) bool {
-	err := exec.Command("git", "config", "--local", "user.name", name).Run()
-	if err != nil {
-		panic(err)
+func setLocalUser(name string, email string) error {
+	if err := exec.Command("git", "config", "--local", "user.name", name).Run(); err != nil {
+		return fmt.Errorf("failed to set git user.name: %w", err)
 	}
-	err = exec.Command("git", "config", "--local", "user.email", email).Run()
-	if err != nil {
-		panic(err)
+	
+	if err := exec.Command("git", "config", "--local", "user.email", email).Run(); err != nil {
+		return fmt.Errorf("failed to set git user.email: %w", err)
 	}
-	return true
+	
+	return nil
 }

@@ -6,18 +6,18 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 	"gopkg.in/AlecAivazis/survey.v1"
 )
 
-func cmdSet(c *cli.Context) {
+func cmdSet(c *cli.Context) error {
 	if !isInitialize() {
 		fmt.Println("You need to initialize.")
 		fmt.Println("Please execute the following command.")
 		fmt.Println("")
 		fmt.Println("  mgu init")
 		fmt.Println("")
-		return
+		return nil
 	}
 
 	raw, err := ioutil.ReadFile(appConfigFilePath)
@@ -27,12 +27,12 @@ func cmdSet(c *cli.Context) {
 		fmt.Println("")
 		fmt.Println("  mgu init")
 		fmt.Println("")
-		return
+		return nil
 	}
 
 	var uc []User
 	if err := json.Unmarshal(raw, &uc); err != nil {
-		panic(err)
+		return fmt.Errorf("failed to unmarshal settings: %w", err)
 	}
 
 	var list []string
@@ -54,7 +54,7 @@ func cmdSet(c *cli.Context) {
 	err = survey.AskOne(prompt, &selected, nil)
 	if err != nil {
 		fmt.Println(err.Error())
-		return
+		return nil
 	}
 
 	s := strings.Split(selected, " ")
@@ -62,7 +62,10 @@ func cmdSet(c *cli.Context) {
 	name := s[0]
 	email := r.Replace(s[1])
 
-	_ = setLocalUser(name, email)
+	if err := setLocalUser(name, email); err != nil {
+		return fmt.Errorf("failed to set local user: %w", err)
+	}
 
 	fmt.Println(name + " <" + email + "> has been set as a Git' local user.")
+	return nil
 }

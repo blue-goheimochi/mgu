@@ -1,10 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/mitchellh/go-homedir"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 	"gopkg.in/AlecAivazis/survey.v1/core"
 )
 
@@ -32,14 +33,13 @@ func main() {
 	app.Version = "0.0.1"
 	app.Action = func(c *cli.Context) error {
 		if c.Args().Get(0) == "" {
-			cmdShow(c)
+			return cmdShow(c)
 		} else {
-			cli.ShowCommandHelp(c, "")
+			return cli.ShowCommandHelp(c, "")
 		}
-		return nil
 	}
 
-	app.Commands = []cli.Command{
+	app.Commands = []*cli.Command{
 		{
 			Name:    "init",
 			Aliases: []string{"i"},
@@ -77,5 +77,8 @@ func main() {
 		},
 	}
 
-	app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
 }
