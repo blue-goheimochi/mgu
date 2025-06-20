@@ -3,13 +3,12 @@ package commands
 import (
 	"fmt"
 
-	"github.com/blue-goheimochi/mgu/pkg/git"
 	"github.com/urfave/cli/v2"
 )
 
 // Show displays the current Git user information
 func Show(c *cli.Context) error {
-	repo := git.NewLocalRepository()
+	repo := repositoryFactory()
 	
 	if !repo.IsGitRepository() {
 		fmt.Println("Your current directory is not a git repository.")

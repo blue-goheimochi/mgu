@@ -11,11 +11,6 @@ import (
 // LocalRepository implements the Repository interface for a local git repository
 type LocalRepository struct{}
 
-// NewLocalRepository creates a new instance of LocalRepository
-func NewLocalRepository() *LocalRepository {
-	return &LocalRepository{}
-}
-
 // IsGitRepository checks if the current directory is a git repository
 func (r *LocalRepository) IsGitRepository() bool {
 	err := exec.Command("git", "config", "--local", "--list").Run()
