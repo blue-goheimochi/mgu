@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os/exec"
 	"strings"
-
-	"github.com/mattn/go-pipeline"
 )
 
 func isGitRepositoryDir() bool {
@@ -17,47 +15,35 @@ func isGitRepositoryDir() bool {
 }
 
 func getGlobalName() string {
-	out, err := pipeline.Output(
-		[]string{"git", "config", "--list"},
-		[]string{"grep", "user.name"},
-	)
+	out, err := exec.Command("git", "config", "--get", "user.name").Output()
 	if err != nil {
 		return ""
 	}
-	return strings.TrimRight(strings.Replace(string(out), "user.name=", "", 1), "\n")
+	return strings.TrimSpace(string(out))
 }
 
 func getGlobalEmail() string {
-	out, err := pipeline.Output(
-		[]string{"git", "config", "--list"},
-		[]string{"grep", "user.email"},
-	)
+	out, err := exec.Command("git", "config", "--get", "user.email").Output()
 	if err != nil {
 		return ""
 	}
-	return strings.TrimRight(strings.Replace(string(out), "user.email=", "", 1), "\n")
+	return strings.TrimSpace(string(out))
 }
 
 func getName() string {
-	out, err := pipeline.Output(
-		[]string{"git", "config", "--local", "--list"},
-		[]string{"grep", "user.name"},
-	)
+	out, err := exec.Command("git", "config", "--local", "--get", "user.name").Output()
 	if err != nil {
 		return ""
 	}
-	return strings.TrimRight(strings.Replace(string(out), "user.name=", "", 1), "\n")
+	return strings.TrimSpace(string(out))
 }
 
 func getEmail() string {
-	out, err := pipeline.Output(
-		[]string{"git", "config", "--local", "--list"},
-		[]string{"grep", "user.email"},
-	)
+	out, err := exec.Command("git", "config", "--local", "--get", "user.email").Output()
 	if err != nil {
 		return ""
 	}
-	return strings.TrimRight(strings.Replace(string(out), "user.email=", "", 1), "\n")
+	return strings.TrimSpace(string(out))
 }
 
 func setLocalUser(name string, email string) error {
